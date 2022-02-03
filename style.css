@@ -13,6 +13,10 @@ h1 {
   font-weight: 400;
   font-size: 64px; }
 
+main {
+  min-height: calc(100vh - 105px);
+  padding: 20px; }
+
 .newspaperForm {
   opacity: 0;
   visibility: hidden;
@@ -80,10 +84,13 @@ h1 {
   color: #ffffff;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 90px;
+  grid-template-rows: 80px;
   justify-items: center;
   align-items: center; }
   .header__title {
+    height: 100%;
+    display: flex;
+    align-items: center;
     grid-column: 3/4;
     font-family: 'Noto Serif', serif; }
   .header__links {
@@ -114,7 +121,7 @@ h1 {
 .search {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 260px 50px 25px 200px;
+  grid-template-rows: 260px 50px 25px 100px;
   justify-items: center;
   align-items: flex-start;
   font-family: 'Roboto', sans-serif; }
@@ -123,6 +130,27 @@ h1 {
   .search__title {
     font-size: 20px;
     font-weight: 700; }
+  .search__box {
+    display: grid;
+    column-gap: 20px;
+    grid-template-columns: 25px 250px 60px; }
+  .search__button {
+    background-color: #1b1b1b;
+    color: #fff;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .search__button--add {
+      width: 25px;
+      border-radius: 12.5px;
+      grid-column: 1/2; }
+    .search__button--go {
+      width: 60px;
+      border-radius: 5px;
+      grid-column: 3/4; }
   .search__input {
     width: 250px;
     height: 25px;
@@ -138,10 +166,13 @@ h1 {
     font-size: 14px;
     font-weight: 400;
     color: #ffffff;
-    z-index: 10; }
+    z-index: 10;
+    grid-column: 2/3; }
   .search__collection {
+    grid-row: 2/3;
+    grid-column: 2/3;
     width: 250px;
-    max-height: 180px;
+    max-height: 90px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -163,14 +194,16 @@ h1 {
     white-space: nowrap;
     overflow: hidden;
     cursor: pointer; }
+    .search__item:hover {
+      background: #7e7e7e; }
 
 .myNewspapers {
   display: grid;
-  justify-content: center;
-  align-items: flex-start;
-  grid-template-rows: 80px;
-  justify-items: center;
-  padding-bottom: 50px; }
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  row-gap: 25px;
+  column-gap: 25px;
+  justify-items: center; }
   .myNewspapers__buttons {
     width: 250px;
     display: flex;
@@ -291,6 +324,8 @@ h1 {
     padding-right: 10px; }
 
 .footer {
+  bottom: 0;
+  max-width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;

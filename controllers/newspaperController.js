@@ -14,12 +14,15 @@ exports.getAllNewspapers = async (req, res) => {
     // // console.log(queryStr);
     // console.log(req.params);
     // console.log(req.key);
+    console.log(req.query);
 
     const regex = new RegExp(req.query.title, 'i');
 
     const query = Newspaper.find({
       title: regex,
     });
+
+    // const query = Newspaper.find({ title: 'aa' });
 
     // const query = Newspaper.find({
     //   title: /orgi/i,
@@ -56,9 +59,7 @@ exports.getNewspaper = async (req, res) => {
 exports.createNewspaper = async (req, res) => {
   try {
     const newNewspaper = await Newspaper.create(req.body);
-    res
-      .status(201)
-      .json({ status: 'success', data: { newspaper: newNewspaper } });
+    res.status(201).json({ status: 'success', data: { newspaper: newNewspaper } });
   } catch (err) {
     console.log(err);
 
@@ -71,14 +72,10 @@ exports.createNewspaper = async (req, res) => {
 
 exports.updateNewspaper = async (req, res) => {
   try {
-    const newspaper = await Newspaper.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    const newspaper = await Newspaper.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     res.status(200).json({
       status: 'success',
       data: {

@@ -7,7 +7,7 @@ search item function
 
 // VARS
 const DOM = {
-  showercase: document.querySelector('.myNewspapers__showercase'),
+  showercase: document.querySelector('.myNewspapers'),
   form: document.querySelector('.newspaperForm'),
   formTitle: document.getElementById('title'),
   formImage: document.getElementById('image'),
@@ -18,25 +18,26 @@ const DOM = {
   formLanguages: document.getElementById('languages'),
   search: document.querySelector('.search__collection'),
   searchInput: document.querySelector('.search__input'),
-  searchButton: document.querySelector('.search__button'),
-  add: document.querySelector('.myNewspapers__button--add'),
+  searchButton: document.querySelector('.search__button--go'),
+  add: document.querySelector('.search__button--add'),
   edit: null,
 };
 
 let newsTitleArr = [];
+let newspaperArr;
+if (sessionStorage.db) newspaperArr ??= JSON.parse(sessionStorage.db);
 
 const getAllNewspapers = async (title) => {
   try {
-    const req =
+    const res =
       title === ''
         ? await fetch('http://127.0.0.1:3000/api/v1/newspapers/')
-        : await fetch(
-            `http://127.0.0.1:3000/api/v1/newspapers/?title=${title}`
-          );
-    console.log(req);
-    console.log(req.headers);
-    const dataObj = await req.json();
-    return dataObj.data.newspapers; // Newspapers Array
+        : await fetch(`http://127.0.0.1:3000/api/v1/newspapers/?title=${title}`);
+    const resBody = await res.json();
+    console.log('getAllNewspapers response is: ' + res.status); // debug
+    newspaperArr = resBody.data.newspapers; // newspapers array
+    sessionStorage.setItem('db', JSON.stringify(newspaperArr));
+    return newspaperArr;
   } catch (err) {
     console.log(err);
   }
@@ -44,58 +45,65 @@ const getAllNewspapers = async (title) => {
 
 const getNewspaper = async (id) => {
   try {
-    const req = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`);
-    const dataObj = await req.json();
-    console.log(dataObj);
-    return dataObj; // Newspaper
+    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`);
+    const resBody = await req.json();
+    console.log('getNewspaper response is: ' + res.status);
+    return resBody; // newspaper
   } catch (err) {
     console.log(err);
   }
 };
 
-const createNewspaper = (dataObj) => {
-  fetch('http://127.0.0.1:3000/api/v1/newspapers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dataObj),
-  })
-    .then((response) => {
-      console.log(req);
-      console.log(req.headers);
-      response.json();
-    })
-    .then((dataObj) => {
-      console.log('Success:', dataObj);
-    })
-    .catch((err) => {
-      console.error('Error:', err);
+const createNewspaper = async (dataObj) => {
+  try {
+    const res = await fetch('http://127.0.0.1:3000/api/v1/newspapers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataObj),
     });
+    const resBody = await res.json();
+    // console.log(resBody.data.newspaper); // newspaper, I can update instantly the interface without call again getAllNewspapers
+    console.log('createNewspaper response is: ' + res.status);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-const updateNewspaper = (id, dataObj) => {
-  fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dataObj),
-  })
-    .then((response) => console.log(response.status))
-    .catch((err) => console.log(err));
-  console.log('updated');
+const updateNewspaper = async (id, dataObj) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataObj),
+    });
+    const resBody = await res.json();
+    // console.log(resBody.data.newspaper); // newspaper, I can update instantly the interface without call again getAllNewspapers
+    console.log('updateNewspaper response is: ' + res.status);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-const deleteNewspaper = (id) =>
-  fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
-    method: 'DELETE',
-  })
-    .then((response) => console.log(response.status))
-    .catch((err) => console.log(err));
+const deleteNewspaper = async (id) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
+      method: 'DELETE',
+    });
+    console.log('deleteNewspaper response is: ' + res.status);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-const updateSearch = (newspaperArr) =>
-  (newsTitleArr = newspaperArr.map((news) => news.title));
+// const updateSearch = (newspaperArr) => (newsTitleArr = newspaperArr.map((news) => news.title));
+
+const saveSession = (data) => {
+  data.forEach((el) => sessionStorage.setItem('db', JSON.stringify(data)));
+};
+
+// sessionStorage.setItem('db', JSON.stringify(newspaperArr));
 
 const updateInterface = (newspaperArr) => {
   //   const newspaperArr = await getAllNewspapers('');
@@ -111,18 +119,12 @@ const updateInterface = (newspaperArr) => {
       <button class="newspaper__remove newspaper__button"></button>
     </div>
     <div class="newspaper__content">
-      <div class="newspaper__img"><img class="newspaper__image" src="${
-        news.image
-      }" alt="cover" data-exp="true"></div>
+      <div class="newspaper__img"><img class="newspaper__image" src="${news.image}" alt="cover" data-exp="true"></div>
       <div class="newspaper__text">
         <p class="newspaper__abstract" data-exp="true">${news.abstract}</p>
         <p class="newspaper__publisher">
-          by <span class="newspaper__author" data-exp="true">${
-            news.publisher.name
-          }</span> on the
-          <span class="newspaper__date" data-exp="true">${new Date(
-            news.publisher.joined_date
-          ).toDateString()}</span>
+          by <span class="newspaper__author" data-exp="true">${news.publisher.name}</span> on the
+          <span class="newspaper__date" data-exp="true">${new Date(news.publisher.joined_date).toDateString()}</span>
         </p>
       </div>
     </div>
@@ -134,9 +136,7 @@ const updateInterface = (newspaperArr) => {
         data-exp="true">External link here</a
       >
       <p class="newspaper__language">
-        available languages: <span class="newspaper__languages" data-exp="true">${news.languages.join(
-          ' '
-        )}</span>
+        available languages: <span class="newspaper__languages" data-exp="true">${news.languages.join(' ')}</span>
       </p>
     </div>
   </article>`;
@@ -150,6 +150,7 @@ const search = (input) => {
     return [];
   }
   const regex = new RegExp(input, 'i');
+  const newsTitleArr = newspaperArr.map((news) => news.title);
   return newsTitleArr.filter((term) => term.match(regex));
 };
 
@@ -164,9 +165,7 @@ const saveData = () => {
       name: DOM.formAuthor.value,
       joined_date: new Date(DOM.formDate.value).toISOString(),
     },
-    languages: Array.from(DOM.formLanguages.selectedOptions).map(
-      (el) => el.value
-    ),
+    languages: Array.from(DOM.formLanguages.selectedOptions).map((el) => el.value),
   };
 };
 
@@ -248,30 +247,25 @@ const checkForm = () => {
 };
 
 // INIT
-getAllNewspapers('').then((newspaperArr) => updateSearch(newspaperArr));
+
 let id;
 document.addEventListener('click', (e) => {
   // DEBUG PURPOSE
   //   console.log(e.target);
 
   // SIMULATE AUTH
-  if (
-    e.target.classList.value.includes('header__link--log') ||
-    e.target.classList.value.includes('header__icon')
-  )
-    getAllNewspapers('').then((newspaperArr) => updateInterface(newspaperArr));
+  if (e.target.classList.value.includes('header__link--log') || e.target.classList.value.includes('header__icon')) {
+    getAllNewspapers('').then(updateInterface);
+  }
 
   // OPEN FORM THROUGH ADD BUTTON
-  if (e.target.classList.value.includes('myNewspapers__button--add')) {
+  if (e.target.classList.value.includes('search__button--add')) {
     DOM.form.classList.add('active');
     DOM.add.classList.add('active');
   }
 
   // CREATE NEWS
-  if (
-    e.target.classList.value.includes('newspaperForm__save') &&
-    DOM.add.classList.contains('active')
-  ) {
+  if (e.target.classList.value.includes('newspaperForm__save') && DOM.add.classList.contains('active')) {
     if (!checkForm()) return;
     DOM.form.classList.remove('active');
     DOM.add.classList.remove('active');
@@ -295,10 +289,7 @@ document.addEventListener('click', (e) => {
   }
 
   // UPDATE NEWS
-  if (
-    e.target.classList.value.includes('newspaperForm__save') &&
-    DOM.edit?.classList.contains('active')
-  ) {
+  if (e.target.classList.value.includes('newspaperForm__save') && DOM.edit?.classList.contains('active')) {
     if (!checkForm()) return;
     DOM.form.classList.remove('active');
     DOM.edit.classList.remove('active');
@@ -315,39 +306,32 @@ document.addEventListener('click', (e) => {
     DOM.form.classList.remove('active');
   }
 
-  // REMOVE NEWS
+  // DELETE NEWS
   if (e.target.classList.value.includes('newspaper__remove')) {
     const id = e.target.parentElement.parentElement.getAttribute('data-id');
     deleteNewspaper(id);
-    setTimeout(updateInterface, 500);
+    // getAllNewspapers('').then((newspaperArr) => updateInterface(newspaperArr));
   }
 
   // CLICK ON SEARCH ITEMS
   if (e.target.classList.value.includes('search__item')) {
     console.log(e.target.innerText);
-    getAllNewspapers(e.target.innerText).then((newspaperArr) =>
-      updateInterface(newspaperArr)
-    );
+    getNewspaper(e.target.innerText).then((newspaperArr) => updateInterface(newspaperArr));
   }
 
   // CLICK ON SEARCH BUTTON
-  if (e.target.classList.value.includes('search__button')) {
-    getAllNewspapers(DOM.searchInput.value).then((newspaperArr) =>
-      updateInterface(newspaperArr)
-    );
+  if (e.target.classList.value.includes('search__button--go')) {
+    if (DOM.searchInput.value === '') return;
+    getAllNewspapers(DOM.searchInput.value).then((newspaperArr) => updateInterface(newspaperArr));
   }
 });
 
 // SEARCH
 DOM.searchInput.addEventListener('input', (e) => {
-  console.log(e);
-
   DOM.search.innerHTML = '';
   const resultArr = search(DOM.searchInput.value);
   resultArr.forEach((result) =>
-    DOM.search.insertAdjacentHTML(
-      'afterbegin',
-      `<span class="search__item">${result}</span>`
-    )
+    DOM.search.insertAdjacentHTML('afterbegin', `<span class="search__item">${result}</span>`)
   );
 });
+//const search (newspaperArr) => (newsTitleArr = newspaperArr.map((news) => news.title))
