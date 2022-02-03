@@ -20,12 +20,21 @@ const DOM = {
   searchInput: document.querySelector('.search__input'),
   searchButton: document.querySelector('.search__button--go'),
   add: document.querySelector('.search__button--add'),
+  login: document.querySelector('.header__link.header__link--log'),
   edit: null,
 };
 
-let newsTitleArr = [];
 let newspaperArr;
+let newspaperOnPageArr;
+// const loginState = (login) => {
+// if(login){
+
+// }
+// };
+
 if (sessionStorage.db) newspaperArr ??= JSON.parse(sessionStorage.db);
+if (sessionStorage.view) newspaperOnPageArr ??= JSON.parse(sessionStorage.view);
+if (sessionStorage.login) DOM.login.classList.add('active');
 
 const getAllNewspapers = async (title) => {
   try {
@@ -35,9 +44,12 @@ const getAllNewspapers = async (title) => {
         : await fetch(`http://127.0.0.1:3000/api/v1/newspapers/?title=${title}`);
     const resBody = await res.json();
     console.log('getAllNewspapers response is: ' + res.status); // debug
-    newspaperArr = resBody.data.newspapers; // newspapers array
-    sessionStorage.setItem('db', JSON.stringify(newspaperArr));
-    return newspaperArr;
+    if (title === '') {
+      newspaperArr = resBody.data.newspapers; // newspapers array
+      sessionStorage.setItem('db', JSON.stringify(newspaperArr));
+      return newspaperArr;
+    }
+    return resBody.data.newspapers;
   } catch (err) {
     console.log(err);
   }
@@ -46,9 +58,9 @@ const getAllNewspapers = async (title) => {
 const getNewspaper = async (id) => {
   try {
     const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`);
-    const resBody = await req.json();
+    const resBody = await res.json();
     console.log('getNewspaper response is: ' + res.status);
-    return resBody; // newspaper
+    return [resBody.message]; // newspaper
   } catch (err) {
     console.log(err);
   }
@@ -85,7 +97,6 @@ const updateNewspaper = async (id, dataObj) => {
     const indexArr = newspaperArr.findIndex((news) => news._id === resBody.data.newspaper._id);
     newspaperArr[indexArr] = resBody.data.newspaper;
     sessionStorage.setItem('db', JSON.stringify(newspaperArr));
-    // console.log(resBody.data.newspaper); // newspaper, I can update instantly the interface without call again getAllNewspapers
     console.log('updateNewspaper response is: ' + res.status);
     return newspaperArr;
   } catch (err) {
@@ -108,9 +119,11 @@ const deleteNewspaper = async (id) => {
   }
 };
 
-const updateInterface = (newspaperArr) => {
+const updateInterface = (newsArr) => {
+  newspaperOnPageArr = newsArr;
+  sessionStorage.setItem('view', JSON.stringify(newspaperOnPageArr));
   let finalStr = '';
-  newspaperArr.forEach((news) => {
+  newsArr.forEach((news) => {
     let tempStr = `<article class="newspaper" data-id="${news._id}">
     <div class="newspaper__header">
       <h2 class="newspaper__title" data-exp="true">${news.title}</h2>
@@ -182,7 +195,7 @@ const readData = (id) => {
       continue;
     }
     if (value.classList.value.includes('newspaper__date')) {
-      dataObj[value.classList[0].slice(11)] = new Date(value.innerText);
+      dataObj[value.classList[0].slice(11)] = new Date(value.innerText).toISOString().slice(0, 10);
       continue;
     }
     dataObj[value.classList[0].slice(11)] = value.innerText;
@@ -246,14 +259,33 @@ const checkForm = () => {
 
 // INIT
 
+if (newspaperOnPageArr) updateInterface(newspaperOnPageArr);
+
 let id;
+
 document.addEventListener('click', (e) => {
-  // DEBUG PURPOSE
-  //   console.log(e.target);
+  console.log(e.target);
 
   // SIMULATE AUTH
-  if (e.target.classList.value.includes('header__link--log') || e.target.classList.value.includes('header__icon')) {
+  if (
+    e.target.classList.value.includes('login') ||
+    e.target.classList.value === 'header__link header__link--log' ||
+    e.target.parentElement.classList.value === 'header__link header__link--log'
+  ) {
+    DOM.login.classList.add('active');
+    sessionStorage.setItem('login', 'true');
     getAllNewspapers('').then(updateInterface);
+    return;
+  }
+
+  if (
+    e.target.classList.value.includes('logout') ||
+    e.target.classList.value.includes('active') ||
+    e.target.parentElement.classList.value.includes('active')
+  ) {
+    DOM.login.classList.remove('active');
+    sessionStorage.clear();
+    DOM.showercase.innerHTML = '';
   }
 
   // OPEN FORM THROUGH ADD BUTTON
@@ -297,6 +329,7 @@ document.addEventListener('click', (e) => {
   // CLOSE FORM
   if (e.target.classList.value.includes('newspaperForm__discard')) {
     DOM.form.classList.remove('active');
+    clearForm();
   }
 
   // DELETE NEWS
@@ -308,13 +341,14 @@ document.addEventListener('click', (e) => {
   // CLICK ON SEARCH ITEMS
   if (e.target.classList.value.includes('search__item')) {
     console.log(e.target.innerText);
-    getNewspaper(e.target.innerText).then((newspaperArr) => updateInterface(newspaperArr));
+    const indexArr = newspaperArr.findIndex((news) => news.title === e.target.innerText);
+    getNewspaper(newspaperArr[indexArr]._id).then(updateInterface);
   }
 
   // CLICK ON SEARCH BUTTON
   if (e.target.classList.value.includes('search__button--go')) {
     if (DOM.searchInput.value === '') return;
-    getAllNewspapers(DOM.searchInput.value).then((newspaperArr) => updateInterface(newspaperArr));
+    getAllNewspapers(DOM.searchInput.value).then(updateInterface);
   }
 });
 
@@ -326,4 +360,3 @@ DOM.searchInput.addEventListener('input', (e) => {
     DOM.search.insertAdjacentHTML('afterbegin', `<span class="search__item">${result}</span>`)
   );
 });
-//const search (newspaperArr) => (newsTitleArr = newspaperArr.map((news) => news.title))

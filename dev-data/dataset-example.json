@@ -5,7 +5,7 @@
     "link": "https://www.irishtimes.com/news/world/us/georgia-offers-bitter-illustration-of-america-s-voting-rights-divide-1.4791020",
     "abstract": "New laws to limit voting access at the heart of threat to US democracy, campaigners say",
     "publisher": {
-      "id": 7,
+      "id": 1,
       "name": "Martin Wall",
       "joined_date": "2022-02-01T17:00:00.000Z"
     },
@@ -29,7 +29,7 @@
     "link": "https://www.irishtimes.com/news/world/europe/us-and-russia-cross-swords-at-un-as-diplomacy-over-ukraine-intensifies-1.4789752",
     "abstract": "Moscow decries western ‘hysteria’ and US and UK threats to sanction Russian elite",
     "publisher": {
-      "id": 11,
+      "id": 3,
       "name": "Daniel McLaughlin",
       "joined_date": "2022-01-31T08:30:00.000Z"
     },
@@ -38,12 +38,72 @@
   {
     "title": "Liberals worry US supreme court moving in increasingly conservative direction",
     "image": "https://www.irishtimes.com/polopoly_fs/1.4787990.1643383110!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
-    "link": "https://www.britannica.com/place/Michigan",
+    "link": "https://www.irishtimes.com/news/world/us/liberals-worry-us-supreme-court-moving-in-increasingly-conservative-direction-1.4787991",
     "abstract": "America Letter: Court already split to 6:3 conservative tilt following Trump presidency",
     "publisher": {
-      "id": 1,
+      "id": 4,
       "name": "Martin Wall",
       "joined_date": "2022-01-28T20:00:00.000Z"
+    },
+    "languages": ["en"]
+  },
+  {
+    "title": "United Arab Emirates says three armed drones were intercepted in its airspace",
+    "image": "https://www.irishtimes.com/polopoly_fs/1.4792955.1643904076!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
+    "link": "https://www.irishtimes.com/news/world/middle-east/united-arab-emirates-says-three-armed-drones-were-intercepted-in-its-airspace-1.4792958",
+    "abstract": "US to deploy warship and advanced fighter jets to protect its Gulf ally from Yemeni Houthi attacks",
+    "publisher": {
+      "id": 5,
+      "name": "Michael Jansen",
+      "joined_date": "2022-02-03T16:01:00.000Z"
+    },
+    "languages": ["en"]
+  },
+  {
+    "title": "At least 17 dead in Argentina after consuming tainted cocaine",
+    "image": "https://www.irishtimes.com/polopoly_fs/1.4792773.1643889074!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
+    "link": "https://www.irishtimes.com/news/world/middle-east/united-arab-emirates-says-three-armed-drones-were-intercepted-in-its-airspace-1.4792958",
+    "abstract": "Dozens hospitalised in Buenos Aires province after taking drug with toxic substance",
+    "publisher": {
+      "id": 6,
+      "name": "Michael Jansen",
+      "joined_date": "2022-02-03T11:51:00.000Z"
+    },
+    "languages": ["en"]
+  },
+  {
+    "title": "Pressure rises on Johnson as more Tory MPs call for confidence vote",
+    "image": "https://www.irishtimes.com/polopoly_fs/1.4792134.1643833041!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
+    "link": "https://www.irishtimes.com/news/world/uk/pressure-rises-on-johnson-as-more-tory-mps-call-for-confidence-vote-1.4792136?",
+    "abstract": "Total of 13 Conservative MPs have now called publicly for prime minister to go",
+    "publisher": {
+      "id": 7,
+      "name": "Denis Staunton",
+      "joined_date": "2022-02-02T20:17:00.000Z"
+    },
+    "languages": ["en"]
+  },
+  {
+    "title": "Israel is an apartheid state, Amnesty report says",
+    "image": "https://www.irishtimes.com/polopoly_fs/1.4790765.1643718096!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
+    "link": "https://www.irishtimes.com/news/world/middle-east/israel-is-an-apartheid-state-amnesty-report-says-1.4790766",
+    "abstract": "Rights group says decades-long campaign against Palestinians is crime against humanity",
+    "publisher": {
+      "id": 8,
+      "name": "Michael Jansen",
+      "joined_date": "2022-02-01T09:34:00.000Z"
+    },
+    "languages": ["en"]
+  },
+  {
+    "title": "Tonga goes into lockdown over coronavirus infections",
+    "image": "https://www.irishtimes.com/polopoly_fs/1.4791653.1643788072!/image/image.jpg_gen/derivatives/box_620_330/image.jpg",
+    "link": "https://www.irishtimes.com/news/world/asia-pacific/tonga-goes-into-lockdown-over-coronavirus-infections-1.4791654",
+    "abstract": "Country feared that accepting aid after tsunami could lead to Covid-19 outbreak",
+    "publisher": {
+      "id": 9,
+      "name": "Denis Staunton",
+      "joined_date": "2022-02-02T07:48:00.000Z"
     },
     "languages": ["en"]
   }
