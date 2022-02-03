@@ -1,0 +1,23 @@
+{
+  "name": "newsie",
+  "version": "1.0.0",
+  "description": "Welcome! This is a front-end & back-end code challenge created by Celtiberian Solutions S.L.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "watch": "node-sass -w sass.scss style.css",
+    "start:prod": "SET NODE_ENV=production&&nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.8"
+  },
+  "devDependencies": {
+    "node-sass": "^7.0.1",
+    "nodemon": "^2.0.15"
+  }
+}
