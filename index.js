@@ -62,13 +62,15 @@ const createNewspaper = async (dataObj) => {
       body: JSON.stringify(dataObj),
     });
     const resBody = await res.json();
-    // console.log(resBody.data.newspaper); // newspaper, I can update instantly the interface without call again getAllNewspapers
+    newspaperArr.push(resBody.data.newspaper);
+    sessionStorage.setItem('db', JSON.stringify(newspaperArr));
     console.log('createNewspaper response is: ' + res.status);
+    return newspaperArr;
   } catch (err) {
     console.log(err);
   }
 };
-
+[].f;
 const updateNewspaper = async (id, dataObj) => {
   try {
     const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
@@ -79,8 +81,13 @@ const updateNewspaper = async (id, dataObj) => {
       body: JSON.stringify(dataObj),
     });
     const resBody = await res.json();
+    console.log(resBody.data.newspaper.id);
+    const indexArr = newspaperArr.findIndex((news) => news._id === resBody.data.newspaper._id);
+    newspaperArr[indexArr] = resBody.data.newspaper;
+    sessionStorage.setItem('db', JSON.stringify(newspaperArr));
     // console.log(resBody.data.newspaper); // newspaper, I can update instantly the interface without call again getAllNewspapers
     console.log('updateNewspaper response is: ' + res.status);
+    return newspaperArr;
   } catch (err) {
     console.log(err);
   }
@@ -92,24 +99,16 @@ const deleteNewspaper = async (id) => {
       method: 'DELETE',
     });
     console.log('deleteNewspaper response is: ' + res.status);
+    const indexArr = newspaperArr.findIndex((news) => news._id === id);
+    newspaperArr.splice(indexArr, 1);
+    sessionStorage.setItem('db', JSON.stringify(newspaperArr));
+    return newspaperArr;
   } catch (err) {
     console.log(err);
   }
 };
 
-// const updateSearch = (newspaperArr) => (newsTitleArr = newspaperArr.map((news) => news.title));
-
-const saveSession = (data) => {
-  data.forEach((el) => sessionStorage.setItem('db', JSON.stringify(data)));
-};
-
-// sessionStorage.setItem('db', JSON.stringify(newspaperArr));
-
 const updateInterface = (newspaperArr) => {
-  //   const newspaperArr = await getAllNewspapers('');
-
-  // Update search
-
   let finalStr = '';
   newspaperArr.forEach((news) => {
     let tempStr = `<article class="newspaper" data-id="${news._id}">
@@ -188,7 +187,6 @@ const readData = (id) => {
     }
     dataObj[value.classList[0].slice(11)] = value.innerText;
   }
-  console.log(dataObj);
   return dataObj;
 };
 
@@ -267,13 +265,11 @@ document.addEventListener('click', (e) => {
   // CREATE NEWS
   if (e.target.classList.value.includes('newspaperForm__save') && DOM.add.classList.contains('active')) {
     if (!checkForm()) return;
+    const objSaved = saveData();
     DOM.form.classList.remove('active');
     DOM.add.classList.remove('active');
-    const objSaved = saveData();
-    createNewspaper(objSaved);
     clearForm();
-    console.log('Newspaper posted, loading in 0.5sec');
-    setTimeout(updateInterface, 500);
+    createNewspaper(objSaved).then(updateInterface);
   }
 
   // OPEN FORM THROUGH EDIT
@@ -282,8 +278,6 @@ document.addEventListener('click', (e) => {
     DOM.form.classList.add('active');
     DOM.edit.classList.add('active');
     id = e.target.parentElement.parentElement.getAttribute('data-id');
-    console.log(id);
-
     const objData = readData(id);
     fillForm(objData);
   }
@@ -291,13 +285,12 @@ document.addEventListener('click', (e) => {
   // UPDATE NEWS
   if (e.target.classList.value.includes('newspaperForm__save') && DOM.edit?.classList.contains('active')) {
     if (!checkForm()) return;
+    const objData = saveData();
     DOM.form.classList.remove('active');
     DOM.edit.classList.remove('active');
     DOM.edit = null;
-    const objData = saveData();
-    updateNewspaper(id, objData);
     clearForm();
-    setTimeout(updateInterface, 500);
+    updateNewspaper(id, objData).then(updateInterface);
     id = null;
   }
 
@@ -309,8 +302,7 @@ document.addEventListener('click', (e) => {
   // DELETE NEWS
   if (e.target.classList.value.includes('newspaper__remove')) {
     const id = e.target.parentElement.parentElement.getAttribute('data-id');
-    deleteNewspaper(id);
-    // getAllNewspapers('').then((newspaperArr) => updateInterface(newspaperArr));
+    deleteNewspaper(id).then(updateInterface);
   }
 
   // CLICK ON SEARCH ITEMS
