@@ -1,10 +1,3 @@
-/*
-TODO
-
-search item function
-
-*/
-
 // VARS
 const DOM = {
   showercase: document.querySelector('.myNewspapers'),
@@ -21,21 +14,29 @@ const DOM = {
   searchButton: document.querySelector('.search__button--go'),
   add: document.querySelector('.search__button--add'),
   login: document.querySelector('.header__link.header__link--log'),
+  labelTitle: document.querySelector('[for="title"]'),
+  labelImage: document.querySelector('[for="image"]'),
+  labelLink: document.querySelector('[for="link"]'),
+  labelAbstract: document.querySelector('[for="abstract"]'),
+  labelAuthor: document.querySelector('[for="author"]'),
+  labelDate: document.querySelector('[for="date"]'),
+  labelLanguages: document.querySelector('[for="languages"]'),
   edit: null,
 };
 
+// temp var used in event delegation to store newspaper id needed in 2 different events
+let id;
+
+// store local data
 let newspaperArr;
 let newspaperOnPageArr;
-// const loginState = (login) => {
-// if(login){
 
-// }
-// };
-
+// restore local data from session
 if (sessionStorage.db) newspaperArr ??= JSON.parse(sessionStorage.db);
 if (sessionStorage.view) newspaperOnPageArr ??= JSON.parse(sessionStorage.view);
 if (sessionStorage.login) DOM.login.classList.add('active');
 
+// API FUNCTIONS
 const getAllNewspapers = async (title) => {
   try {
     const res =
@@ -45,7 +46,7 @@ const getAllNewspapers = async (title) => {
     const resBody = await res.json();
     console.log('getAllNewspapers response is: ' + res.status); // debug
     if (title === '') {
-      newspaperArr = resBody.data.newspapers; // newspapers array
+      newspaperArr = resBody.data.newspapers; // newspaper array
       sessionStorage.setItem('db', JSON.stringify(newspaperArr));
       return newspaperArr;
     }
@@ -74,7 +75,7 @@ const createNewspaper = async (dataObj) => {
       body: JSON.stringify(dataObj),
     });
     const resBody = await res.json();
-    newspaperArr.push(resBody.data.newspaper);
+    newspaperArr.push(resBody.data.newspaper); // add newspaper in local
     sessionStorage.setItem('db', JSON.stringify(newspaperArr));
     console.log('createNewspaper response is: ' + res.status);
     return newspaperArr;
@@ -93,9 +94,8 @@ const updateNewspaper = async (id, dataObj) => {
       body: JSON.stringify(dataObj),
     });
     const resBody = await res.json();
-    console.log(resBody.data.newspaper.id);
     const indexArr = newspaperArr.findIndex((news) => news._id === resBody.data.newspaper._id);
-    newspaperArr[indexArr] = resBody.data.newspaper;
+    newspaperArr[indexArr] = resBody.data.newspaper; // update newspaper in local
     sessionStorage.setItem('db', JSON.stringify(newspaperArr));
     console.log('updateNewspaper response is: ' + res.status);
     return newspaperArr;
@@ -111,7 +111,7 @@ const deleteNewspaper = async (id) => {
     });
     console.log('deleteNewspaper response is: ' + res.status);
     const indexArr = newspaperArr.findIndex((news) => news._id === id);
-    newspaperArr.splice(indexArr, 1);
+    newspaperArr.splice(indexArr, 1); // delete newspaper in local
     sessionStorage.setItem('db', JSON.stringify(newspaperArr));
     return newspaperArr;
   } catch (err) {
@@ -119,6 +119,7 @@ const deleteNewspaper = async (id) => {
   }
 };
 
+// INTERFACE FUNCTIONS
 const updateInterface = (newsArr) => {
   newspaperOnPageArr = newsArr;
   sessionStorage.setItem('view', JSON.stringify(newspaperOnPageArr));
@@ -210,7 +211,19 @@ const fillForm = (dataObj) => {
   DOM.formAbstract.value = dataObj.abstract;
   DOM.formAuthor.value = dataObj.author;
   DOM.formDate.value = dataObj.date;
-  DOM.formLanguages.value = dataObj.languages;
+  let valueArr = dataObj.languages.split(' ');
+  let langArr = ['en', 'es', 'it', 'fr'];
+  let indexArr = [];
+  j = 0;
+  for (j = 0; j < 4; j++) {
+    for (i = 0; i < 4; i++) {
+      if (valueArr[j] === langArr[i]) {
+        indexArr.push(i);
+        break;
+      }
+    }
+  }
+  indexArr.forEach((index) => (DOM.formLanguages.options[index].selected = true));
 };
 
 const clearForm = () => {
@@ -224,84 +237,90 @@ const clearForm = () => {
 };
 
 const checkForm = () => {
+  DOM.labelTitle.style = '';
+  DOM.labelImage.style = '';
+  DOM.labelLink.style = '';
+  DOM.labelAbstract.style = '';
+  DOM.labelAuthor.style = '';
+  DOM.labelDate.style = '';
+  DOM.labelLanguages.style = '';
+  let valid = true;
   if (DOM.formTitle.value === '') {
-    console.log('Title required');
-    return false;
+    DOM.labelTitle.style.color = '#ac1010';
+    valid = false;
   }
-
   if (DOM.formImage.value === '') {
-    console.log('Image required');
-    return false;
+    DOM.labelImage.style.color = '#ac1010';
+    valid = false;
   }
   if (DOM.formLink.value === '') {
-    console.log('Link required');
-    return false;
+    DOM.labelLink.style.color = '#ac1010';
+    valid = false;
   }
   if (DOM.formAbstract.value === '') {
-    console.log('Abstract required');
-    return false;
+    DOM.labelAbstract.style.color = '#ac1010';
+    valid = false;
   }
   if (DOM.formAuthor.value === '') {
-    console.log('Author required');
-    return false;
+    DOM.labelAuthor.style.color = '#ac1010';
+    valid = false;
   }
   if (DOM.formDate.value === '') {
-    console.log('Date required');
-    return false;
+    DOM.labelDate.style.color = '#ac1010';
+    valid = false;
   }
   if (DOM.formLanguages.value === '') {
-    console.log('At least a language required');
-    return false;
+    DOM.labelLanguages.style.color = '#ac1010';
+    valid = false;
   }
   console.log('check ok');
-  return true;
+  return valid;
 };
 
 // INIT
+if (sessionStorage.login) {
+  DOM.login.classList.add('active');
+  DOM.add.classList.add('active');
+  if (newspaperOnPageArr) updateInterface(newspaperOnPageArr);
+}
 
-if (newspaperOnPageArr) updateInterface(newspaperOnPageArr);
-
-let id;
-
+// EVENT DELEGATION
 document.addEventListener('click', (e) => {
-  console.log(e.target);
-
-  // SIMULATE AUTH
+  // SIMULATE AUTH - LOGIN
   if (
     e.target.classList.value.includes('login') ||
     e.target.classList.value === 'header__link header__link--log' ||
     e.target.parentElement.classList.value === 'header__link header__link--log'
   ) {
     DOM.login.classList.add('active');
+    DOM.add.classList.add('active');
     sessionStorage.setItem('login', 'true');
     getAllNewspapers('').then(updateInterface);
     return;
   }
 
+  // SIMULATE AUTH - LOGOUT
   if (
     e.target.classList.value.includes('logout') ||
-    e.target.classList.value.includes('active') ||
+    e.target.classList.value === 'header__link header__link--log active' ||
     e.target.parentElement.classList.value.includes('active')
   ) {
     DOM.login.classList.remove('active');
+    DOM.add.classList.remove('active');
     sessionStorage.clear();
     DOM.showercase.innerHTML = '';
+    DOM.search.innerHTML = '';
+    DOM.searchInput.value = '';
+    newspaperArr = null;
+    newspaperOnPageArr = null;
+    return;
   }
 
   // OPEN FORM THROUGH ADD BUTTON
   if (e.target.classList.value.includes('search__button--add')) {
     DOM.form.classList.add('active');
     DOM.add.classList.add('active');
-  }
-
-  // CREATE NEWS
-  if (e.target.classList.value.includes('newspaperForm__save') && DOM.add.classList.contains('active')) {
-    if (!checkForm()) return;
-    const objSaved = saveData();
-    DOM.form.classList.remove('active');
-    DOM.add.classList.remove('active');
-    clearForm();
-    createNewspaper(objSaved).then(updateInterface);
+    return;
   }
 
   // OPEN FORM THROUGH EDIT
@@ -312,6 +331,25 @@ document.addEventListener('click', (e) => {
     id = e.target.parentElement.parentElement.getAttribute('data-id');
     const objData = readData(id);
     fillForm(objData);
+    return;
+  }
+
+  // CLOSE FORM
+  if (e.target.classList.value.includes('newspaperForm__discard')) {
+    DOM.form.classList.remove('active');
+    clearForm();
+    return;
+  }
+
+  // CREATE NEWS
+  if (e.target.classList.value.includes('newspaperForm__save') && DOM.add.classList.contains('active')) {
+    if (!checkForm()) return;
+    const objSaved = saveData();
+    DOM.form.classList.remove('active');
+    DOM.add.classList.remove('active');
+    clearForm();
+    createNewspaper(objSaved).then(updateInterface);
+    return;
   }
 
   // UPDATE NEWS
@@ -324,39 +362,41 @@ document.addEventListener('click', (e) => {
     clearForm();
     updateNewspaper(id, objData).then(updateInterface);
     id = null;
-  }
-
-  // CLOSE FORM
-  if (e.target.classList.value.includes('newspaperForm__discard')) {
-    DOM.form.classList.remove('active');
-    clearForm();
+    return;
   }
 
   // DELETE NEWS
   if (e.target.classList.value.includes('newspaper__remove')) {
     const id = e.target.parentElement.parentElement.getAttribute('data-id');
     deleteNewspaper(id).then(updateInterface);
+    return;
   }
 
-  // CLICK ON SEARCH ITEMS
+  // SEARCH BAR - SEARCH ITEMS CLICKABLE
   if (e.target.classList.value.includes('search__item')) {
     console.log(e.target.innerText);
     const indexArr = newspaperArr.findIndex((news) => news.title === e.target.innerText);
     getNewspaper(newspaperArr[indexArr]._id).then(updateInterface);
+    return;
   }
 
-  // CLICK ON SEARCH BUTTON
-  if (e.target.classList.value.includes('search__button--go')) {
-    if (DOM.searchInput.value === '') return;
-    getAllNewspapers(DOM.searchInput.value).then(updateInterface);
+  // SEARCH BAR - CLICK ON SEARCH BUTTON
+  if (sessionStorage.login) {
+    if (e.target.classList.value.includes('search__button--go')) {
+      if (DOM.searchInput.value === '') return;
+      getAllNewspapers(DOM.searchInput.value).then(updateInterface);
+    }
   }
 });
 
-// SEARCH
+// SEARCH BAR - SEARCH TYPED INPUT
 DOM.searchInput.addEventListener('input', (e) => {
-  DOM.search.innerHTML = '';
-  const resultArr = search(DOM.searchInput.value);
-  resultArr.forEach((result) =>
-    DOM.search.insertAdjacentHTML('afterbegin', `<span class="search__item">${result}</span>`)
-  );
+  if (sessionStorage.login) {
+    DOM.search.innerHTML = '';
+    const resultArr = search(DOM.searchInput.value);
+    resultArr.forEach((result) =>
+      DOM.search.insertAdjacentHTML('afterbegin', `<span class="search__item">${result}</span>`)
+    );
+    return;
+  }
 });

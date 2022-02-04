@@ -61,6 +61,7 @@ main {
     align-self: center;
     padding-bottom: 20px;
     font-weight: 700;
+    font-size: 20px;
   }
 
   &__drawer {
@@ -234,6 +235,13 @@ main {
       width: 25px;
       border-radius: 12.5px;
       grid-column: 1/2;
+      opacity: 0;
+      visibility: hidden;
+
+      &.active {
+        opacity: 1;
+        visibility: visible;
+      }
     }
 
     &--go {

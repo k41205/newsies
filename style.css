@@ -45,7 +45,8 @@ main {
   .newspaperForm__action {
     align-self: center;
     padding-bottom: 20px;
-    font-weight: 700; }
+    font-weight: 700;
+    font-size: 20px; }
   .newspaperForm__drawer {
     display: flex;
     gap: 20px; }
@@ -173,7 +174,12 @@ main {
     .search__button--add {
       width: 25px;
       border-radius: 12.5px;
-      grid-column: 1/2; }
+      grid-column: 1/2;
+      opacity: 0;
+      visibility: hidden; }
+      .search__button--add.active {
+        opacity: 1;
+        visibility: visible; }
     .search__button--go {
       width: 60px;
       border-radius: 5px;
