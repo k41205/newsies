@@ -1,15 +1,18 @@
 {
-  "name": "newsie",
+  "name": "newsies",
   "version": "1.0.0",
-  "description": "Welcome! This is a front-end & back-end code challenge created by Celtiberian Solutions S.L.",
+  "description": "Simple full-stack app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "watch": "node-sass -w sass.scss style.css",
+    "reset": "node ./dev-db.js --delete&&node ./dev-db.js --import",
+    "server": "nodemon server.js",
+    "web": "http-server ./public -p 3030",
+    "watch-sass": "node-sass -w sass.scss ./public/style.css",
+    "start": "concurrently \"npm:server\" \"npm:web\" \"npm:watch-sass\"",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Giacomo Cavarretta",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^14.3.2",
@@ -17,6 +20,8 @@
     "mongoose": "^6.1.8"
   },
   "devDependencies": {
+    "concurrently": "^7.0.0",
+    "http-server": "^14.1.0",
     "node-sass": "^7.0.1",
     "nodemon": "^2.0.15"
   }
