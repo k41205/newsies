@@ -1,3 +1,4 @@
+// NORMALIZE
 *,
 *:before,
 *:after {
@@ -11,6 +12,7 @@ body {
   padding: 0;
 }
 
+// GENERAL ELEMENTS
 h1 {
   font-weight: 400;
   font-size: 64px;
@@ -21,10 +23,10 @@ main {
   padding: 20px;
 }
 
+// COMPONENTS
 .newspaperForm {
   opacity: 0;
   visibility: hidden;
-
   transition: all 0.3s;
 
   &.active {
@@ -33,8 +35,6 @@ main {
   }
 
   position: fixed;
-  //   width: 600px;
-  //   height: 400px;
   z-index: 9999;
   top: 50%;
   left: 50%;
@@ -105,11 +105,11 @@ main {
   }
 
   &__save {
-    background-image: url(/img/healthicons_yes-outline.svg);
+    background-image: url(/img/save-icon.svg);
   }
 
   &__discard {
-    background-image: url(/img/akar-icons_circle-x.svg);
+    background-image: url(/img/remove-icon.svg);
   }
 }
 
@@ -254,7 +254,7 @@ main {
   &__input {
     width: 250px;
     height: 25px;
-    background-image: url(/img/fa-solid_search.svg);
+    background-image: url(/img/search-icon.svg);
     background-repeat: no-repeat;
     background-position-y: center;
     background-position-x: 5px;
@@ -310,12 +310,6 @@ main {
 }
 
 .myNewspapers {
-  // display: grid;
-  // justify-content: center;
-  // align-items: flex-start;
-  // grid-template-rows: 80px;
-  // justify-items: center;
-  // padding-bottom: 50px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -360,8 +354,6 @@ main {
   }
 
   &__showercase {
-    //   swap to display grid when newspaper button is pressed
-    //   display: none
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
@@ -420,10 +412,10 @@ main {
   }
 
   &:hover &__edit {
-    background-image: url(/img/akar-icons_edit.svg);
+    background-image: url(/img/edit-icon.svg);
   }
   &:hover &__remove {
-    background-image: url(/img/akar-icons_circle-x.svg);
+    background-image: url(/img/remove-icon.svg);
   }
 
   &__content {
@@ -480,7 +472,6 @@ main {
   }
 
   &__link {
-    // text-decoration: none;
     color: inherit;
     padding-left: 10px;
   }

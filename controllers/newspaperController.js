@@ -4,6 +4,7 @@ exports.getAllNewspapers = async (req, res) => {
   try {
     // BUILD QUERY
 
+    // I was starting implementing a more advanced way to filtering and paging results for the client
     // // 1) Filtering
     // const queryObj = { ...req.query };
     // const excludedFields = ['page', 'sort', 'limit', 'fields'];
@@ -14,19 +15,11 @@ exports.getAllNewspapers = async (req, res) => {
     // // console.log(queryStr);
     // console.log(req.params);
     // console.log(req.key);
-    console.log(req.query);
 
     const regex = new RegExp(req.query.title, 'i');
-
     const query = Newspaper.find({
       title: regex,
     });
-
-    // const query = Newspaper.find({ title: 'aa' });
-
-    // const query = Newspaper.find({
-    //   title: /orgi/i,
-    // });
 
     // EXECUTE QUERY
     const newspapers = await query;

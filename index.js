@@ -273,7 +273,6 @@ const checkForm = () => {
     DOM.labelLanguages.style.color = '#ac1010';
     valid = false;
   }
-  console.log('check ok');
   return valid;
 };
 
@@ -374,7 +373,6 @@ document.addEventListener('click', (e) => {
 
   // SEARCH BAR - SEARCH ITEMS CLICKABLE
   if (e.target.classList.value.includes('search__item')) {
-    console.log(e.target.innerText);
     const indexArr = newspaperArr.findIndex((news) => news.title === e.target.innerText);
     getNewspaper(newspaperArr[indexArr]._id).then(updateInterface);
     return;
