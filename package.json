@@ -4,11 +4,10 @@
   "description": "Simple full-stack app",
   "main": "index.js",
   "scripts": {
-    "reset": "node ./dev-db.js --delete&&node ./dev-db.js --import",
-    "server": "nodemon server.js",
-    "web": "http-server ./public -p 3030",
-    "watch-sass": "node-sass -w sass.scss ./public/style.css",
-    "start": "concurrently \"npm:server\" \"npm:web\" \"npm:watch-sass\"",
+    "reset": "node ./backend/dev-db.js --delete&&node ./backend/dev-db.js --import",
+    "server": "nodemon ./backend/server.js",
+    "watch-sass": "node-sass -w ./frontend/sass.scss ./frontend/style.css",
+    "start": "concurrently \"npm:server\" \"npm:watch-sass\"",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js"
   },
   "keywords": [],
@@ -21,8 +20,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
-    "http-server": "^14.1.0",
     "node-sass": "^7.0.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.16"
   }
 }

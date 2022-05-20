@@ -105,11 +105,11 @@ main {
   }
 
   &__save {
-    background-image: url(/img/save-icon.svg);
+    background-image: url(./img/save-icon.svg);
   }
 
   &__discard {
-    background-image: url(/img/remove-icon.svg);
+    background-image: url(./img/remove-icon.svg);
   }
 }
 
@@ -254,7 +254,7 @@ main {
   &__input {
     width: 250px;
     height: 25px;
-    background-image: url(/img/search-icon.svg);
+    background-image: url(./img/search-icon.svg);
     background-repeat: no-repeat;
     background-position-y: center;
     background-position-x: 5px;
@@ -412,10 +412,10 @@ main {
   }
 
   &:hover &__edit {
-    background-image: url(/img/edit-icon.svg);
+    background-image: url(./img/edit-icon.svg);
   }
   &:hover &__remove {
-    background-image: url(/img/remove-icon.svg);
+    background-image: url(./img/remove-icon.svg);
   }
 
   &__content {

@@ -9,21 +9,16 @@ const dotenv = require('dotenv');
 const app = require('./app');
 const Newspaper = require('./models/newspaperModel');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './backend/config.env' });
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
 mongoose.connect(DB).then(() => {
   console.log('DB connection successful!');
 });
 
 // READ JSON FILE
-const newspapers = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/dataset-example.json`, 'utf-8')
-);
+const newspapers = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/dataset-example.json`, 'utf-8'));
 
 // IMPORT DATA INTO DB
 const importData = async () => {

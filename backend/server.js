@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './backend/config.env' });
 const app = require('./app');
+
+console.log(process.env.DATABASE);
 
 if (process.env.NODE_ENV === 'development') {
   console.log('Logging active');
