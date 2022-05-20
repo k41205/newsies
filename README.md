@@ -4,8 +4,10 @@ It's a full-stack app realized in a week for an interview purpose. The tech stac
 
 You can give a look at it here:
 
-[Newsies](https://newsies.netlify.app/ 'Homepage')
+[Newsies](https://newsies.netlify.app/ 'Newsies homepage')
 
-Hosted on Netlify with automated CI/CD:
+Back end hosted on Heroku and kept alive with [Kaffeine](https://kaffeine.herokuapp.com/ 'Kaffeine homepage') (sleep mode between 00:00-06:00 GMT).
+
+Front end hosted on Netlify with automated CI/CD:
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/0e73e81d-e167-402e-bf61-89d904ba4728/deploy-status)](https://app.netlify.com/sites/newsies/deploys)
