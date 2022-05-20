@@ -24,6 +24,8 @@ const DOM = {
   edit: null,
 };
 
+const server = 'https://newsies-backend.herokuapp.com'; // change it to http://127.0.0.1:3000/ to use it with local server
+
 // temp var used in event delegation to store newspaper id needed in 2 different events
 let id;
 
@@ -41,8 +43,8 @@ const getAllNewspapers = async (title) => {
   try {
     const res =
       title === ''
-        ? await fetch('http://127.0.0.1:3000/api/v1/newspapers/')
-        : await fetch(`http://127.0.0.1:3000/api/v1/newspapers/?title=${title}`);
+        ? await fetch(`${server}/api/v1/newspapers/`)
+        : await fetch(`${server}/api/v1/newspapers/?title=${title}`);
     const resBody = await res.json();
     console.log('getAllNewspapers response is: ' + res.status); // debug
     if (title === '') {
@@ -58,7 +60,7 @@ const getAllNewspapers = async (title) => {
 
 const getNewspaper = async (id) => {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`);
+    const res = await fetch(`${server}/api/v1/newspapers/${id}`);
     const resBody = await res.json();
     console.log('getNewspaper response is: ' + res.status);
     return [resBody.message]; // newspaper
@@ -69,7 +71,7 @@ const getNewspaper = async (id) => {
 
 const createNewspaper = async (dataObj) => {
   try {
-    const res = await fetch('http://127.0.0.1:3000/api/v1/newspapers', {
+    const res = await fetch(`${server}/api/v1/newspapers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dataObj),
@@ -86,7 +88,7 @@ const createNewspaper = async (dataObj) => {
 [].f;
 const updateNewspaper = async (id, dataObj) => {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
+    const res = await fetch(`${server}/api/v1/newspapers/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +108,7 @@ const updateNewspaper = async (id, dataObj) => {
 
 const deleteNewspaper = async (id) => {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/api/v1/newspapers/${id}`, {
+    const res = await fetch(`${server}/api/v1/newspapers/${id}`, {
       method: 'DELETE',
     });
     console.log('deleteNewspaper response is: ' + res.status);
