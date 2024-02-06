@@ -24,7 +24,7 @@ const DOM = {
   edit: null,
 };
 
-const server = 'https://newsies-backend.herokuapp.com'; // change it to http://127.0.0.1:3000/ to use it with local server
+const server = 'https://newsies-backend.onrender.com'; // change it to http://127.0.0.1:3000/ to use it with local server
 
 // temp var used in event delegation to store newspaper id needed in 2 different events
 let id;
